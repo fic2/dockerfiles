@@ -1,0 +1,8 @@
+db:
+  image: "mongo:2.6"
+web:
+  build: .
+  links:
+    - db
+  ports:
+    - "80:80"
