@@ -9,7 +9,7 @@ This directory contains a Dockerfile of [ppnet](https://github.com/pixelpark/ppn
 
 ### Running the Docker image from the public registry
 
-* (https://registry.hub.docker.com/u/fic2/ppnet/)
+A prebuilt image is available at the [fic2/ppnet Docker Hub registry](https://registry.hub.docker.com/u/fic2/ppnet/)
 
 Once Docker is installed, run:
 ```
@@ -26,7 +26,7 @@ You can then access the website at http://host-ip:8000
 
 ### Building the Docker image
 
-* Use the following command inside the cloned repository:
+Use the following command inside the cloned repository:
 
     ```
 	docker build -t 'fic2/ppnet' .
