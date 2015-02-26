@@ -1,13 +1,13 @@
-FROM nginx
+FROM gliderlabs/alpine
 
-WORKDIR /tmp
+RUN apk-install nginx curl
 
-RUN apt-get -y update && \
-    apt-get -y install wget unzip
+RUN curl -sL https://github.com/pixelpark/ppnet/archive/master.tar.gz | tar zx ppnet-master/www -C /usr
 
-RUN wget --no-check-certificate https://github.com/pixelpark/ppnet/archive/master.zip && \
-    unzip master.zip ppnet-master/www/\* && \
-    mv ppnet-master/www/* /usr/share/nginx/html && \
-    rm master.zip
+ADD nginx.conf /etc/nginx/nginx.conf
+
+ADD run.sh /usr/local/bin/run.sh
 
 EXPOSE 80
+
+CMD ["/usr/local/bin/run.sh"]

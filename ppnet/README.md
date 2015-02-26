@@ -1,34 +1,38 @@
-## Dockerfile for ppnet, the Social Network Enabler
+## Docker image for ppnet, the Social Network Enabler
 
-This directory contains a Dockerfile of [ppnet](https://github.com/pixelpark/ppnet).
+This is a Docker image of [ppnet](https://github.com/pixelpark/ppnet).
 
+### Running the Docker image using a shared database server
 
-### Requirements
+Once Docker is installed, use the following command to run ppnet and forward the container port 80 to the host port 8000:
 
-* Install [Docker](https://www.docker.com)
-
-### Running the Docker image from the public registry
-
-A prebuilt image is available at the [fic2/ppnet Docker Hub registry](https://registry.hub.docker.com/u/fic2/ppnet/)
-
-Once Docker is installed, run:
 ```
-docker run --name my-social-network -d fic2/ppnet
+docker run -d -p 8000:80 fic2/ppnet
 ```
-The web server will be listening at http://container-ip
-You can find the container-ip by running ```docker inspect my-social-network | grep IPAddress```
+You can then access the website at [http://localhost:8000](http://localhost:8000)
 
-You can forward the container port 80 to the host 8000 by running instead:
+### Running the Docker image with your own database server
+
+First run a CouchDB server and publish it on port 5984:
+
 ```
-docker run --name my-social-network -d -p 8000:80 fic2/ppnet
+docker run -d -p 5984:5984 fic2/couchdb
 ```
-You can then access the website at http://host-ip:8000
+
+Then launch ppnet with:
+
+```
+docker run -d -p 8000:80 -e COUCHDB_URL=http://your_host_ip:5984 fic2/ppnet
+```
+Bear in mind that the CouchDB URL is used from client-side JavaScript code running on user's browsers. The specified IP and port need to be accessible from the user's browsers.
+
+You can try whether this is true beforehand by browsing to http://your_host_ip:5984
 
 ### Building the Docker image
 
-Use the following command inside the cloned repository:
-
-    ```
-	docker build -t 'fic2/ppnet' .
-	```
+```
+git clone https://github.com/tai-lab/ppnet.git
+cd ppnet
+docker build -t my_username/ppnet .
+```
 
