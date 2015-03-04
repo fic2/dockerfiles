@@ -15,7 +15,9 @@ The webservice can be launch and made accessible on the host's port 8080 with th
 
     docker run -d -p 8080:443 fic2/ocdb:latest
 
-Then the service can be consumed with:
+You can now test the service by opening in your browser: [https://localhost:8080/v1/frontend/index.html](https://localhost:8080/v1/frontend/index.html)
+
+The service API can be consumed with:
 
     curl -k -X GET 'https://localhost:8080/v1/cities' -H 'Accept: application/json'
 
