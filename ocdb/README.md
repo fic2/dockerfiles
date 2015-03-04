@@ -11,7 +11,7 @@ This directory contains a Dockerfile of [OCDB](https://github.com/fraunhoferfoku
 ### Usage
 
 The `ocdb` endpoint is exposed internally on the port 443.
-The webservice can be launch and made accessible on the host's port 8080 with the command:
+The webservice can be launched and made accessible on the host's port 8080 with the command:
 
     docker run -d -p 8080:443 fic2/ocdb:latest
 
