@@ -6,7 +6,7 @@ RUN apt-get -y update \
     && echo "deb http://www.mivoq.it/repositories/apt/debian unstable main" > /etc/apt/sources.list.d/fatts.list \
     && apt-get -y update \
     && apt-get -y install `apt-cache search '^marytts-voice-' | sed -e 's/ .*//'` \
-    && apt-get clean
+    && apt-get -y clean
 
 EXPOSE 59125
 
