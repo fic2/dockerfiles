@@ -10,5 +10,5 @@ RUN apt-get -y update \
 
 EXPOSE 59125
 
-CMD ["/usr/bin/marytts-server","--","-Dlog4j.logger.marytts='INFO,stderr'"]
+CMD ["/usr/bin/marytts-server","--","-Dlog4j.logger.marytts=INFO,stderr"]
 
