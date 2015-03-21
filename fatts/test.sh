@@ -22,7 +22,9 @@ echo "Entering $ENABLER_NAME smoke test sequence. $ENABLER_NAME validation proce
 REQUEST_URL=/info/version
 echo "Run smoke test for $REQUEST_URL"
 
-ITEM_RESULT=`curl -s -o /dev/null -w "%{http_code}" http://"$HOST:$BASEPORT$REQUEST_URL"`
+# During the first test we will tollerate some retries because the server
+# may not be immediately available.
+ITEM_RESULT=`curl -s --retry 8 --connect-timeout 5 -o /dev/null -w "%{http_code}" http://"$HOST:$BASEPORT$REQUEST_URL"`
 if [ "$ITEM_RESULT" -ne "200" ]; then
         echo "Curl command for $REQUEST_URL failed. Validation procedure terminated."
         echo "Debug information: HTTP code $ITEM_RESULT instead of expected 200 from $HOST:$BASEPORT"
