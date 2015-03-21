@@ -24,7 +24,18 @@ echo "Run smoke test for $REQUEST_URL"
 
 # During the first test we will tollerate some retries because the server
 # may not be immediately available.
-ITEM_RESULT=`curl -s --retry 8 --connect-timeout 5 -o /dev/null -w "%{http_code}" http://"$HOST:$BASEPORT$REQUEST_URL"`
+n=0
+retry=1
+until [ $n -ge 8 ]
+do
+    ITEM_RESULT=`curl -s --connect-timeout 5 -o /dev/null -w "%{http_code}" http://"$HOST:$BASEPORT$REQUEST_URL"`
+    if [ "$ITEM_RESULT" -eq "200" ]; then
+	break
+    fi
+    n=$(($n+1))
+    sleep $retry
+    retry=$(($retry*2))
+done
 if [ "$ITEM_RESULT" -ne "200" ]; then
         echo "Curl command for $REQUEST_URL failed. Validation procedure terminated."
         echo "Debug information: HTTP code $ITEM_RESULT instead of expected 200 from $HOST:$BASEPORT"
