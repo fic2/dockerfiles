@@ -3,7 +3,7 @@ swagger: '2.0'
 info:
   title: FA-TTS API
   description: Flexible and Adaptive Text-To-Speech API.
-  version: "0.0.1"
+  version: "0.0.2"
 # the domain of the service
 # host: fiware.tts.mivoq.it
 # array of all schemes that your API supports
@@ -244,7 +244,7 @@ definitions:
       fa_tts_api_version:
         type: string
         description: MAJOR.MINOR.PATCH version string. Additional labels may be used for minor changes. Versions with the same MAJOR.MINOR numbers should be API backward compatible.
-  VoiceInVoices:
+  VoiceDescription:
     properties:
       id:
         type: string
@@ -262,7 +262,7 @@ definitions:
         type: array
         description: List of voices
         items:
-          $ref: '#/definitions/VoiceInVoices'
+          $ref: '#/definitions/VoiceDescription'
       next:
         type: string
         description: if defined, an URL to the next chunk of the list
@@ -290,51 +290,99 @@ definitions:
               description: ID of the Input type
   Outputs:
     properties:
-      inputs:
+      outputs:
         type: array
         description: List of Output types
         items:
+          $ref: '#/definitions/OutputTypeDescription'
+  OutputTypeDescription:
+    description: Output type description
+    properties:
+      id:
+        type: string
+        description: ID of the Output type
+      formats:
+        type: array
+        description: List of formats for the Output type
+        items:
           type: object
-          description: Output type
+          description: Format
           properties:
             id:
               type: string
-              description: ID of the Output type
-            formats:
-              type: array
-              description: List of formats for the Output type
-              items:
-                type: object
-                description: Format
-                properties:
-                  id:
-                    type: string
-                    description: ID of the Format type
-              
+              description: ID of the Format type
   Styles:
     properties:
       styles:
         type: array
-        description: List of styles
+        description: List of styles descriptions
         items:
-          type: object
-          description: Style
-          properties:
-            id:
-              type: string
-              description: ID of the style
+          $ref: '#/definitions/StyleDescription'
+  StyleDescription:
+    properties:
+      id:
+        type: string
+        description: ID of the style
   Effects:
     properties:
-      styles:
+      effects:
         type: array
-        description: List of effects
+        description: List of effects descriptions
         items:
-          type: object
-          description: Effect
-          properties:
-            id:
-              type: string
-              description: ID of the effect
+          $ref: '#/definitions/EffectDescription'
+  EffectDescription:
+    properties:
+      id:
+        required: true
+        type: string
+        description: An identifier to be used to refer to the effect
+      type:
+        required: true
+        type: enum
+        description: Expected value type for the effect
+        enum: [ "double", "integer", "boolean", "enum", "T" ]
+      merge:
+        required: true
+        type: enum
+        description: Merge strategy specify how the effect acts when applied multiple times
+        enum: [ "add", "multiply", "overwrite", "natural", "custom" ]
+      name:
+        required: false
+        type: string
+        description: A human readable name for the effect
+      description:
+        required: false
+        type: string
+        description: A text that describes how the effect is supposed to act and to be used
+      sample:
+        required: false
+        type: undefined
+        description: A sample value so that the effect is easy to notice
+      identity:
+        required: false
+        type: undefined
+        description: A sample value so that the effect does not have any effect
+      min:
+        required: false
+        type: undefined
+        description: The minimum allowed value, values below it will be reported to this value
+      max:
+        required: false
+        type: undefined
+        description: The maximum allowed value, values above it will be reported to this value
+      enum:
+        required: false
+        type: array
+        description: List of allowed values
+        items:
+          type: string
+      attributes:
+        required: false
+        type: array
+        description: List of attributes for the object (expressed in term of Effect descriptions)
+        items:
+          $ref: '#/definitions/EffectDescription'
+
 #  Error:
 #    properties:
 #      code:
