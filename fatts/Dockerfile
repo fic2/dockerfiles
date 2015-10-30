@@ -5,7 +5,7 @@ RUN apt-get -y update \
     && curl -s http://repository.mivoq.it/mivoq.gpg.key | apt-key add - \
     && echo "deb http://repository.mivoq.it/repositories/apt/debian experimental main" > /etc/apt/sources.list.d/fatts.list \
     && apt-get -y update \
-    && apt-get -y install `apt-cache search '^marytts-voice-' | sed -e 's/ .*//'` \
+    && apt-get -y install `apt-cache search '^marytts-voice-' | sed -e 's/ .*//' | grep -v marytts-voice-en-cmu-slt-hsmm` \
     && apt-get -y clean
 
 EXPOSE 59125
