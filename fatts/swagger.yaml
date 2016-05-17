@@ -3,7 +3,7 @@ swagger: '2.0'
 info:
   title: FA-TTS API
   description: Flexible and Adaptive Text-To-Speech API.
-  version: "0.0.2"
+  version: "0.0.3"
 # the domain of the service
 # host: fiware.tts.mivoq.it
 # array of all schemes that your API supports
@@ -56,11 +56,20 @@ paths:
             - "female"
             - "male"
             - "neutral"
+            - "unknown"
         - name: voice[age]
           in: query
           description: Desired voice age (>= 0)
           required: false
           type: integer
+        - name: voice[selection_algorythm]
+          in: query
+          description: Desired voice selection algorythm. This is the algortyhm used to try to satisfy voice parameters. \"ssml\" algorythm (the default), tries to always provide a voice, even if parameters cannot be fully satisfied. \"strict\" algorythm discharge any voice that do not respect the requested parameters, with the exception of locale parameter, that is treated as in the \"ssml\" case (i.e., if a voice is available, supporting a broader locale with respect to the one requested, it may be selected by the algorythm).
+          required: false
+          type: string
+          enum:
+            - "ssml"
+            - "strict"
         - name: voice[variant]
           in: query
           description: When several voices can be used, this parameter select the specific voice (>= 1)
@@ -196,6 +205,28 @@ paths:
               $ref: '#/definitions/Outputs'
         default:
           description: Unexpected error
+  /info/voice/{voice}/locales/all:
+    get:
+      summary: Supported locales for the given voice.
+      description: |
+         Requests information about supported locales for the given voice.
+      tags:
+        - Voices
+        - Info
+        - Locales
+      parameters:
+        - name: voice
+          in: path
+          description: Voice id
+          type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          schema:
+              $ref: '#/definitions/Locales'
+        default:
+          description: Unexpected error
   /info/voice/{voice}/styles/all:
     get:
       summary: Supported styles for the given voice.
@@ -236,6 +267,30 @@ paths:
           description: Success
           schema:
               $ref: '#/definitions/Effects'
+        default:
+          description: Unexpected error
+  /info/voice/{voice}/capabilies/all:
+    get:
+      summary: Supported capabilities for the given voice.
+      description: |
+         Requests information about supported capabilities for the given voice.
+         This method allows to ask about inputs, outputs, locales, styles and effects
+         with a single query.
+      tags:
+        - Voices
+        - Info
+        - Locales
+      parameters:
+        - name: voice
+          in: path
+          description: Voice id
+          type: string
+          required: true
+      responses:
+        200:
+          description: Success
+          schema:
+              $ref: '#/definitions/Capabilities'
         default:
           description: Unexpected error
 definitions:
@@ -288,6 +343,38 @@ definitions:
             id:
               type: string
               description: ID of the Input type
+  Capabilities:
+    properties:
+      locales:
+        type: array
+        description: List of supported locales
+        items:
+          type: string
+      inputs:
+        type: array
+        description: List of Input types
+        items:
+          type: object
+          description: Input type
+          properties:
+            id:
+              type: string
+              description: ID of the Input type
+      outputs:
+        type: array
+        description: List of Output types
+        items:
+          $ref: '#/definitions/OutputTypeDescription'
+      styles:
+        type: array
+        description: List of styles descriptions
+        items:
+          $ref: '#/definitions/StyleDescription'
+      effects:
+        type: array
+        description: List of effects descriptions
+        items:
+          $ref: '#/definitions/EffectDescription'
   Outputs:
     properties:
       outputs:
@@ -333,51 +420,51 @@ definitions:
   EffectDescription:
     properties:
       id:
-        required: true
+        #required: true
         type: string
         description: An identifier to be used to refer to the effect
       type:
-        required: true
-        type: enum
+        #required: true
+        #type: enum
         description: Expected value type for the effect
         enum: [ "double", "integer", "boolean", "enum", "T" ]
       merge:
-        required: true
-        type: enum
+        #required: true
+        #type: enum
         description: Merge strategy specify how the effect acts when applied multiple times
         enum: [ "add", "multiply", "overwrite", "natural", "custom" ]
       name:
-        required: false
+        #required: false
         type: string
         description: A human readable name for the effect
       description:
-        required: false
+        #required: false
         type: string
         description: A text that describes how the effect is supposed to act and to be used
       sample:
-        required: false
-        type: undefined
+        #required: false
+        #type: undefined
         description: A sample value so that the effect is easy to notice
       identity:
-        required: false
-        type: undefined
+        #required: false
+        #type: undefined
         description: A sample value so that the effect does not have any effect
       min:
-        required: false
-        type: undefined
+        #required: false
+        #type: undefined
         description: The minimum allowed value, values below it will be reported to this value
       max:
-        required: false
-        type: undefined
+        #required: false
+        #type: undefined
         description: The maximum allowed value, values above it will be reported to this value
       enum:
-        required: false
+        #required: false
         type: array
         description: List of allowed values
         items:
           type: string
       attributes:
-        required: false
+        #required: false
         type: array
         description: List of attributes for the object (expressed in term of Effect descriptions)
         items:
