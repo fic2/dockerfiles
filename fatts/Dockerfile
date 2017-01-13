@@ -1,3 +1,5 @@
+MAINTAINER giulio.paci@mivoq.it
+
 FROM debian:jessie
 
 RUN apt-get -y update \
