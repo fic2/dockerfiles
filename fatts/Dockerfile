@@ -1,6 +1,6 @@
-MAINTAINER giulio.paci@mivoq.it
-
 FROM debian:jessie
+
+MAINTAINER giulio.paci@mivoq.it
 
 RUN apt-get -y update \
     && apt-get -y install curl \
